@@ -2,6 +2,13 @@
 <?php
 class danhmuccontroller extends Controller
 {
+    private $role = ['admin'];
+    // handle
+    function __construct() {
+        if(!in_array($_SESSION['role'],$this->role)) {
+            return $this->redirect('user/login');
+        }
+    }
     public function index()
     {
         $danhmuc = $this->model('danhmuc'); //

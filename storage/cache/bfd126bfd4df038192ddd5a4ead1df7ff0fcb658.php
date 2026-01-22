@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <title>Document</title>
-</head>
-
-<body>
-    <br>
+<?php $__env->startSection('title', 'danh mục'); ?>
+<?php $__env->startSection('content'); ?>
     <a href="/danhmuc/them" class="btn btn-sm btn-light border text-succes">Them danh muc</a>
     <table class="table">
         <tr>
@@ -18,21 +8,24 @@
             <th> image </th>
             <th>action</th>
         </tr>
-        <?php foreach ($danhmuc as $data): ?>
+        <?php $__currentLoopData = $danhmuc; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <tr>
-                <td><?= $data['id']; ?></td>
-                <td><?= $data['name']; ?></td>
-                <td><?= $data['image']; ?></td>
-
+                <td><?php echo e($item['id']); ?></td>
+                <td><?php echo e($item['name']); ?></td>
+                <td><?php echo e($item['image']); ?></td>
                 <td>
-                    <a href="/danhmuc/delete/<?= $data['id'] ?>" class="btn btn-sm btn-light border text-danger"
-                     >Delete
+                    <a href="/danhmuc/delete/<?php echo e($item['id']); ?>" class="btn btn-sm btn-light border text-danger">Delete
                     </a>
                 </td>
             </tr>
-        <?php endforeach; ?>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
     </table>
-</body>
+<?php $__env->stopSection(); ?>
+<?php $__env->startPush('scripts'); ?>
+<script>
+    alert("hello world")
+</script>
+<?php $__env->stopPush(); ?>
 
-</html><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/php2_mvc/app/views/danhmuc/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.index', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/php2_mvc/app/views/danhmuc/index.blade.php ENDPATH**/ ?>
