@@ -7,9 +7,9 @@ define('CONTROLLER_PATH', APP_PATH . '/controllers');
 define('MODEL_PATH', APP_PATH . '/models');
 
 $vendorAutoload = BASE_PATH . "/vendor/autoload.php";
-var_dump($vendorAutoload);
+// var_dump($vendorAutoload);
 if (file_exists($vendorAutoload)) {
-    echo "exist here";
+    // echo "exist here";
     require_once $vendorAutoload;
 } else {
     echo "not working";
@@ -19,7 +19,7 @@ if (class_exists(\Dotenv\Dotenv::class)) {
     \Dotenv\Dotenv::createImmutable(BASE_PATH)->safeLoad();
 }
 
-var_dump($_ENV);
+// var_dump($_ENV);
 spl_autoload_register(function (string $class): void {
     $paths = [
         APP_PATH . '/core/' . $class . '.php',

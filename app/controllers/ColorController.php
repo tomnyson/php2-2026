@@ -28,8 +28,6 @@ class ColorController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = trim($_POST['name']);
-            var_dump($_POST);
-            var_dump($name);
 
             if (!empty($name)) {
                 $colorModel = $this->model('color');

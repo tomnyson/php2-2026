@@ -1,7 +1,7 @@
 <?php
-class Product extends Model
+class Variant extends Model
 {
-    private $table = "products";
+    private $table = "variants";
     public function all()
     {
         $sql = "select * from $this->table";
@@ -24,31 +24,30 @@ class Product extends Model
 
     public function create($data = [])
     {
-        $sql = "insert into $this->table (name, price, image, status) values(:name, :price, :image, :status )";
+        $sql = "insert into $this->table (colorId, sizeId, quantity, image) VALUES (:colorId, :sizeId, :quantity, :image)";
+        $conn = $this->connect();
+        $stmt =  $conn->prepare($sql);
+        return $stmt->execute([
+            'colorId' => $data['colorId'],
+            'sizeId' => $data['sizeId'],
+            'quantity' => $data['quantity'],
+            'image' => $data['image'],
+        ]);
+    }
+
+    public function update($data = [], $id)
+    {
+        $sql = "update $this->table set name = :name where id = :id";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
         return $stmt->execute([
             'name' => $data['name'],
-            'price' => $data['price'],
-            'image' => $data['image'],
-            'status' => $data['status']
+            'id' => (int)$id
         ]);
     }
 
-    public function update($data = [], $id) {
-        $sql = "update $this->table set name = :name, price = :price, image = :image, status = :status where id = :id";
-        $conn = $this->connect();
-        $stmt =  $conn->prepare($sql);
-        return $stmt->execute([
-            'name' => $data['name'],
-            'price' => $data['price'],
-            'image' => $data['image'],
-            'status' => $data['status'],
-            'id' => $id
-        ]);
-    }
-
-    public function delete($id) {
+    public function delete($id)
+    {
         $sql = "delete from $this->table where id = :id";
         $conn = $this->connect();
         $stmt =  $conn->prepare($sql);
