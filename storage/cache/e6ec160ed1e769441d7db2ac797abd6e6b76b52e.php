@@ -8,7 +8,7 @@
 
 <?php if(isset($_SESSION['error'])): ?>
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-   <?php echo e($_SESSION['success']); ?>
+   <?php echo e($_SESSION['error']); ?>
 
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
@@ -18,4 +18,5 @@
 <?php
 unset($_SESSION['success']);
 unset($_SESSION['error']);
-?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/php2_mvc/app/views/layouts/includes/message.blade.php ENDPATH**/ ?>
+?>
+<?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/php2_mvc/app/views/layouts/includes/message.blade.php ENDPATH**/ ?>

@@ -16,6 +16,37 @@
         <button type="submit" class="btn btn-success">Sua</button>
     </form>
     <h3>Danh sách biến thể</h3>
+      <table class="table">
+        <tr>
+            <th> id </th>
+            <th> color </th>
+            <th> size </th>
+            <th> quantity </th>
+            <th>action</th>
+        </tr>
+     
+        <?php $__currentLoopData = $variants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        
+            <tr>
+                <td><?php echo e($item['id']); ?></td>
+                <td><?php echo e($item['colorName']); ?></td>
+                <td><?php echo e($item['sizeName']); ?></td>
+                 <td><?php echo e($item['quantity']); ?></td>
+                <td>
+                     <a href="/size/show/<?php echo e($item['id']); ?>" class="btn btn-success">View
+                        
+                    </a>
+                    <a href="/product/delete/<?php echo e($item['id']); ?>" class="btn btn-danger">Delete
+                        
+                    </a>
+                       <a href="/product/update/<?php echo e($item['id']); ?>" class="btn btn-primary">Edit
+                        
+                    </a>
+                </td>
+            </tr>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+    </table>
     <!-- tao table html and render data tu ajax -->
     <button type="submit" class="btn btn-primary mb-3">+</button>
     <form class="row g-2">
@@ -73,6 +104,12 @@
                 body: formData
             }).then(result => {
                 console.log(result)
+                /*
+                b1: check status 
+                error -> alert loi
+                success => c1. reload page danh cho cac ban trung binh
+                kha > => dung javascript them 1 dong vao table ko can load lai page
+                */
             })
 
         })

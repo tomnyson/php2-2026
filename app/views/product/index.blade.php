@@ -19,7 +19,7 @@
                 <td><img src="{{ $item['image'] }}" alt="" width="100"></td>
                 <td>{{ $item['status'] == 1 ? 'active' : 'disable' }}</td>
                 <td>
-                     <a href="/size/show/{{ $item['id'] }}" class="btn btn-success">View
+                     <a href="/product/show/{{ $item['id'] }}" class="btn btn-success">View
                         
                     </a>
                     <a href="/product/delete/{{ $item['id'] }}" class="btn btn-danger">Delete
@@ -34,4 +34,3 @@
 
     </table>
 @endsection
-

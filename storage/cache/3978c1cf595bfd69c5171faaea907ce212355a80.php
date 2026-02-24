@@ -18,7 +18,7 @@
                 <td><img src="<?php echo e($item['image']); ?>" alt="" width="100"></td>
                 <td><?php echo e($item['status'] == 1 ? 'active' : 'disable'); ?></td>
                 <td>
-                     <a href="/size/show/<?php echo e($item['id']); ?>" class="btn btn-success">View
+                     <a href="/product/show/<?php echo e($item['id']); ?>" class="btn btn-success">View
                         
                     </a>
                     <a href="/product/delete/<?php echo e($item['id']); ?>" class="btn btn-danger">Delete
@@ -33,6 +33,5 @@
 
     </table>
 <?php $__env->stopSection(); ?>
-
 
 <?php echo $__env->make('layouts.index', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/php2_mvc/app/views/product/index.blade.php ENDPATH**/ ?>

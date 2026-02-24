@@ -13,6 +13,126 @@ class ProductController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $productId = filter_var($id, FILTER_VALIDATE_INT);
+        if ($productId === false || $productId < 1) {
+            $this->notFound('Product not found');
+            return;
+        }
+
+        $productModel = $this->model('product');
+        $item = $productModel->find((int) $productId);
+        if (!$item) {
+            $this->notFound('Product not found');
+            return;
+        }
+
+        $variantRows = $this->model('variant')->findByProductId($productId);
+        $colors = $this->model('color')->all();
+        $sizes = $this->model('size')->all();
+
+        $colorMap = [];
+        foreach ($colors as $color) {
+            $colorMap[(int) $color['id']] = $color['name'];
+        }
+        // echo "<pre>";
+        // var_dump($colorMap);
+        // echo "</pre>";
+        $sizeMap = [];
+        foreach ($sizes as $size) {
+            $sizeMap[(int) $size['id']] = $size['name'];
+        }
+        // echo "<pre>";
+        // var_dump($variantRows);
+        // echo "</pre>";
+        $variants = [];
+
+        foreach ($variantRows as $variant) {
+            if ((int) ($variant['productId'] ?? 0) !== (int) $productId) {
+                continue;
+            }
+
+            $variant['colorName'] = $colorMap[(int) ($variant['colorId'] ?? 0)] ?? 'N/A';
+            $variant['sizeName'] = $sizeMap[(int) ($variant['sizeId'] ?? 0)] ?? 'N/A';
+            $variants[] = $variant;
+        }
+        // echo "<pre>";
+        // var_dump($variants);
+        // echo "</pre>";
+        $this->view("product/show", [
+            'title' => 'Product detail',
+            'product' => $item,
+            'variants' => $variants
+        ]);
+    }
+
+    public function add_cart()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            $this->redirect('/product');
+            return;
+        }
+
+
+        $productId = filter_var($_POST['productId'] ?? null, FILTER_VALIDATE_INT);
+        $variantId = filter_var($_POST['variantId'] ?? null, FILTER_VALIDATE_INT);
+        $quantity = filter_var($_POST['quantity'] ?? null, FILTER_VALIDATE_INT);
+
+        if ($productId === false || $productId < 1 || $variantId === false || $variantId < 1 || $quantity === false || $quantity < 1) {
+            $_SESSION['error'] = 'Invalid cart data.';
+            $this->redirect('/product');
+            return;
+        }
+
+        $productModel = $this->model('product');
+        $variantModel = $this->model('variant');
+
+        $product = $productModel->find((int) $productId);
+        $variant = $variantModel->find((int) $variantId);
+
+        if (!$product || !$variant || (int) ($variant['productId'] ?? 0) !== (int) $productId) {
+            $_SESSION['error'] = 'Product variant not found.';
+            $this->redirect('/product/show/' . $productId);
+            return;
+        }
+
+        $stock = (int) ($variant['quantity'] ?? 0);
+        if ($stock < 1) {
+            $_SESSION['error'] = 'This variant is out of stock.';
+            $this->redirect('/product/show/' . $productId);
+            return;
+        }
+
+        if ($quantity > $stock) {
+            $quantity = $stock;
+        }
+        $userId = $_SESSION['userId'];
+        $cartModel = $this->model('cart');
+        $variantItem = $cartModel->getCartItemByUserId($variantId, $userId);
+        /**
+         * check cart model neu chua co thi them moi
+         *  neu ma co roi thi cap nhat
+         */
+        
+        if(empty($variantItem)) {
+            // them moi
+            $cartModel->create([
+                'userId' => $userId,
+                'quantity' => $quantity,
+                'variantId' => $variantId
+            ]);
+        } else {
+             $cartModel->update([
+                'userId' => $userId,
+                'quantity' => $quantity + $variantItem['quantity']
+            ], $variantItem['id']);
+        }
+      
+        
+        $this->redirect('/product/show/' . $productId);
+    }
+
     public function delete($id)
     {
         $size = $this->model('product');
@@ -51,13 +171,16 @@ class ProductController extends Controller
         $colors = $this->model('color')->all();
         $sizes = $this->model('size')->all();
         $data = $product->find($id);
+        $variant = $this->model('variant');
+        $variant_data = $variant->all();
         // var_dump($colors);
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $this->view("product/edit", [
                 'title' => 'edit product',
                 'product' => $data,
                 'colors' => $colors,
-                'sizes' => $sizes
+                'sizes' => $sizes,
+                'variants' => $variant_data
             ]);
         } else {
             $name = trim($_POST['name']);
